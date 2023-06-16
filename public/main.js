@@ -18,12 +18,10 @@ function getTrails() {
 
 //   function makeCard(results) {
 //     return `<div class="getresults-card">
-//         <img class="photo" src="${trails.image_path}" />
 //         <h3 class="name">${trails.trail_name}</h3>
 //         <p>${trail.location}</p>
 //         <p>${trail.difficulty}</p>
 //         <p>${trail.distance} miles</p>
-//         <p>${trail.duration}</p>
 //         <p>${trail.rating} stars</p>
 //       </div>`;
 //   }
