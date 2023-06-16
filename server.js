@@ -13,6 +13,8 @@ const client = new Pool ({
     connectionString: dbString
 });
 
+app.use(express.static('public'));
+
 app.get('/trails', async (req, res) => {
     try {
         const results = await client.query('SELECT * FROM trails');
