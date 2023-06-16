@@ -9,7 +9,7 @@ CREATE TABLE trails (
    duration interval,
    description text,
    rating numeric
-   --photo bytea
+   --image_path text
 );
 
 
