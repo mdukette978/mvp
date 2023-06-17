@@ -1,5 +1,8 @@
 body {
     font-family: "Lato", sans-serif;
+    margin: 0;
+    padding: 0;
+
   }
   
 .sidebar {
@@ -9,8 +12,51 @@ body {
     z-index: 1;
     top: 0;
     left: 0;
-    background-color: #111;
+    background-color: #963A2F;
     overflow-x: hidden;
     transition: 0.5s;
     padding-top: 60px;
 }
+
+.sticky-header {
+    position: sticky;
+    top: 0;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+/* .search-bar {
+    display: flex;
+    align-items: center;
+} */
+  
+/* .search-bar input[type="text"] {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-right: 10px;
+} */
+
+.description.collapsed {
+    max-height: 60px;
+}
+
+.description.expanded {
+    max-height: none;
+}
+
+.banner {
+    height: 150px;
+    width: 100%;
+    position: relative;
+  }
+  
+  .banner-image {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+  }

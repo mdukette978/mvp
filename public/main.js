@@ -4,6 +4,8 @@ const url = "http://localhost:3200";
 
 const body = document.querySelector('body');
 const getResultsContainer = document.getElementById('getresults');
+//getResultsContainer.style = "text-align: center"
+getResultsContainer.style = "margin: 50px"
 
 async function getTrails() {
     try {
@@ -21,19 +23,45 @@ getTrails();
 
 function makeCard(trail) {
     return `
-    <div class="getresults-card">
-        <h3 class="name">${trail.trail_name}</h3>
-        <p>${trail.location}</p>
-        <p>${trail.difficulty}</p>
-        <p>${trail.distance} mi</p>
-        <p>${trail.description}</p>
-        <p>${trail.rating} stars</p>
-        <div class="card-buttons">
-            <button class="edit-button" data-trail_id="${trail.trail_id}">Edit</button>
-            <button class="delete-button" data-trail_id="${trail.trail_id}">Delete</button>
+    <div class="getresults-card" style="display: inline-block; width: 300px; background-color: #FFFEE9; border-radius: 5px; padding: 20px; margin: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+        <h3 class="name" style="font-size: 20px; font-weight: bold; margin-bottom: 10px;">${trail.trail_name}</h3>
+        <p style="font-size: 14px; color: #555; margin-bottom: 5px;">${trail.location}</p>
+        <p style="font-size: 14px; color: #555; margin-bottom: 5px;">${trail.difficulty}</p>
+        <p style="font-size: 14px; color: #555; margin-bottom: 5px;">${trail.distance} mi</p>
+        <p style="font-size: 16px; color: black; margin-bottom: 10px;">${trail.description}</p>
+        <p class="read-more" style="display: none;"><a href="#" onclick="toggleDescription(this); return false;">Read More</a></p>
+        <p style="font-size: 14px; color: black; margin-bottom: 15px;">${trail.rating}★</p>
+        <div class="card-buttons" style="display: flex; justify-content: flex-end">
+            <button class="edit-button" style="border-radius: 5px; background-color: #BEDCB5" data-trail_id="${trail.trail_id}">Edit</button>
+            <button class="delete-button" style="border-radius: 5px; background-color: #BEDCB5" data-trail_id="${trail.trail_id}">Delete</button>
         </div>
     </div>`;
 }
+
+var dropdown = document.getElementById('dropdown');
+    dropdown.addEventListener("change", async function() {
+    const userInput = dropdown.value;
+    console.log('Yes, working');
+
+    try {
+        const response = await fetch(`${url}/trails`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ location: userInput })
+        });
+      
+        const data = await response.json();
+        console.log(data);
+        getResultsContainer.innerHTML = '';
+        data.forEach((trail) => {
+          getResultsContainer.innerHTML += makeCard(trail);
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    });
 
 const deleteBtn = document.getElementsByClassName('delete-button');
 const editBtn = document.getElementsByClassName('edit-button');
@@ -99,10 +127,12 @@ document.addEventListener('click', async (event) => {
 
                 if (updateResponse.ok) {
                     console.log("Trail updated successfully");
-                    closeNav();
                     getResultsContainer.innerHTML = "";
-                    getTrails();
+                    await getTrails();
+                    closeNav();
                     form.reset();
+                    saveChangesBtn.style.display = "none";
+                    submitBtn.style.display = "block";
                 } else {
                     throw new Error("Failed to update trail");
                 }
@@ -111,6 +141,25 @@ document.addEventListener('click', async (event) => {
             }
         });
     }
+    // function toggleDescription(link) {
+    //     const description = link.parentNode.previousElementSibling;
+    //     description.classList.toggle('expanded');
+    //     link.innerText = description.classList.contains('expanded') ? 'Read Less' : 'Read More';
+    // }
+    
+    // document.addEventListener('DOMContentLoaded', function() {
+    //     const descriptions = document.getElementsByClassName('description');
+    //     for (let i = 0; i < descriptions.length; i++) {
+    //         const description = descriptions[i];
+    //         const maxHeight = 60; // Maximum height in pixels for four lines of text
+    //         if (description.offsetHeight > maxHeight) {
+    //             description.classList.add('collapsed');
+    //             const readMore = description.nextElementSibling;
+    //             readMore.style.display = 'block';
+    //         }
+    //     }
+    // });
+    
 });
 
 const submitBtn = document.getElementById('submitBtn');
@@ -134,7 +183,7 @@ submitBtn.addEventListener("click", async (e) => {
         description: description, 
         rating: rating
     } 
-console.log(formData);
+    console.log(formData);
     try {
         const response = await fetch(`${url}/trails`, {
             method: "POST",
@@ -159,10 +208,23 @@ console.log(formData);
 
 
 function openNav() {
+    console.log('openning sidebar')
     document.getElementById("mySidebar").style.width = "250px";
     document.getElementById("main").style.marginLeft = "250px";
+
+    // document.addEventListener("click", outsideClickHandler);
 }
 function closeNav() {
     document.getElementById("mySidebar").style.width = "0";
     document.getElementById("main").style.marginLeft = "0";
+
+    // document.removeEventListener("click", outsideClickHandler);
 }
+// function outsideClickHandler(event) {
+//     const sidebar = document.getElementById("mySidebar");
+//     const target = event.target;
+//     // Check if the clicked element is outside the sidebar
+//     if (!sidebar.contains(target)) {
+//         closeNav();
+//     }
+// }

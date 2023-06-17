@@ -1,6 +1,5 @@
 const express = require('express');
 const app = express();
-app.use(express.json());
 const cors = require('cors');
 
 const { Pool } = require('pg');
@@ -14,12 +13,25 @@ const client = new Pool ({
     connectionString: dbString
 });
 
+app.use(express.json());
 app.use(cors());
 app.use(express.static('public'));
 
 app.get('/trails', async (req, res) => {
     try {
         const results = await client.query('SELECT * FROM trails');
+        res.status(200).json(results.rows);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Could not connect to database');
+    }
+});
+
+app.post('/trails', async (req, res) => {
+    const { location } = req.body;
+    console.log(req.body);
+    try {
+        const results = await client.query('SELECT * FROM trails WHERE location = $1', [location]);
         res.status(200).json(results.rows);
     } catch (err) {
         console.error(err);
