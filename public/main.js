@@ -14,41 +14,47 @@ function getTrails() {
                 getResultsContainer.innerHTML += makeCard(trail);
             });
         });
-   }
-  
-   getTrails();
+}
+getTrails();
 
-   function makeCard(trail) {
-     return `
-        <div class="getresults-card">
-            <h3 class="name">${trail.trail_name}</h3>
-            <p>${trail.location}</p>
-            <p>${trail.difficulty}</p>
-            <p>${trail.distance} miles</p>
-            <p>${trail.description}</p>
-            <p>${trail.rating} stars</p>
-            <div class="card-buttons">
-                <button id="editBtn" class="edit-button">Edit</button>
-                <button id="deleteBtn" class="delete-button">Delete</button>
-            </div>
-       </div>`;
-   }
+function makeCard(trail) {
+    return `
+    <div class="getresults-card">
+        <h3 class="name">${trail.trail_name}</h3>
+        <p>${trail.location}</p>
+        <p>${trail.difficulty}</p>
+        <p>${trail.distance} mi</p>
+        <p>${trail.description}</p>
+        <p>${trail.rating} stars</p>
+        <div class="card-buttons">
+            <button class="edit-button">Edit</button>
+            <button class="delete-button" data-trail_id="${trail.trail_id}">Delete</button>
+        </div>
+    </div>`;
+}
 
-const deleteBtn = document.getElementById('deleteBtn');
-const editBtn = document.getElementById('editBtn');
+const deleteBtn = document.getElementsByClassName('delete-button');
+const editBtn = document.getElementsByClassName('edit-button');
 const submitBtn = document.getElementById('submitBtn');
 
-// deleteBtn.addEventListener("click", () => {
-//     let choice = prompt('Are you sure you want to delete this trail?');
-//     if (choice == "yes") {
-//       fetch(`${url}/trails/${trail.trail_id}`, {
-//         method: "DELETE",
-//       }).then(() => {
-//         console.log(`trail was deleted.`);
-//         getTrails();
-//       });
-//     }
-// });
+document.addEventListener('click', (event) => {
+    const deleteBtn = event.target.closest('.delete-button');
+    //const editBtn = event.target.closest('.edit-button');
+
+    if (deleteBtn) {
+        let confirmation = confirm('Are you sure you want to delete this trail?');
+        if (confirmation) {
+            const trailId = deleteBtn.dataset.trail_id;
+            fetch(`${url}/trails/${trailId}`, {
+                method: "DELETE",
+            }).then(() => {
+                console.log(`Trail was deleted.`);
+                getResultsContainer.innerHTML = "";
+                getTrails();
+            });
+        }
+    }
+});
 
 // editBtn.addEventListener("click", () => {
 //     fetch(`${url}/trails/${trail.trail_id}`, { 
@@ -60,6 +66,7 @@ const submitBtn = document.getElementById('submitBtn');
 //       }
 //     );
 // });
+const form = document.getElementById('sidebar-form');
 
 submitBtn.addEventListener("click", async (e) => {
     e.preventDefault();
@@ -91,7 +98,9 @@ console.log(formData);
 
         if (response.ok) {
             console.log("Trail added successfully");
+            closeNav();
             getTrails();
+            form.reset();
         } else {
             throw new Error("Failed to add trail");
         }
