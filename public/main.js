@@ -5,15 +5,17 @@ const url = "http://localhost:3200";
 const body = document.querySelector('body');
 const getResultsContainer = document.getElementById('getresults');
 
-function getTrails() {
-    fetch(`${url}/trails`)
-        .then((res) => res.json())
-        .then((results) => {
-            console.log(results);
-            results.forEach((trail) => {
-                getResultsContainer.innerHTML += makeCard(trail);
-            });
+async function getTrails() {
+    try {
+        const response = await fetch(`${url}/trails`);
+        const results = await response.json();
+        console.log(results);
+        results.forEach((trail) => {
+            getResultsContainer.innerHTML += makeCard(trail);
         });
+    } catch (error) {
+        console.error(error);
+    }
 }
 getTrails();
 
@@ -27,7 +29,7 @@ function makeCard(trail) {
         <p>${trail.description}</p>
         <p>${trail.rating} stars</p>
         <div class="card-buttons">
-            <button class="edit-button">Edit</button>
+            <button class="edit-button" data-trail_id="${trail.trail_id}">Edit</button>
             <button class="delete-button" data-trail_id="${trail.trail_id}">Delete</button>
         </div>
     </div>`;
@@ -35,37 +37,83 @@ function makeCard(trail) {
 
 const deleteBtn = document.getElementsByClassName('delete-button');
 const editBtn = document.getElementsByClassName('edit-button');
-const submitBtn = document.getElementById('submitBtn');
 
-document.addEventListener('click', (event) => {
+document.addEventListener('click', async (event) => {
     const deleteBtn = event.target.closest('.delete-button');
-    //const editBtn = event.target.closest('.edit-button');
+    const editBtn = event.target.closest('.edit-button');
 
     if (deleteBtn) {
         let confirmation = confirm('Are you sure you want to delete this trail?');
         if (confirmation) {
             const trailId = deleteBtn.dataset.trail_id;
-            fetch(`${url}/trails/${trailId}`, {
-                method: "DELETE",
-            }).then(() => {
+            try {
+                await fetch(`${url}/trails/${trailId}`, {
+                    method: "DELETE",
+                });
                 console.log(`Trail was deleted.`);
                 getResultsContainer.innerHTML = "";
-                getTrails();
-            });
+                await getTrails();
+            } catch (error) {
+                console.error(error);
+            }
         }
+    }
+    if (editBtn) {
+        const trailId = editBtn.dataset.trail_id;
+        const response = await fetch(`${url}/trails/${trailId}`);
+        const results = await response.json();
+        console.log(results[0])
+        openNav();
+        // Populate the form fields with trail data
+        document.getElementById("trailName").value = results[0].trail_name;
+        document.getElementById("location").value = results[0].location;
+        document.getElementById("difficulty").value = results[0].difficulty;
+        document.getElementById("distance").value = results[0].distance;
+        document.getElementById("description").value = results[0].description;
+        document.getElementById("rating").value = results[0].rating;
+
+        // Show the "Save Changes" button and hide the "Submit" button
+        submitBtn.style.display = "none";
+        document.getElementById("saveChangesBtn").style.display = "block";
+
+        document.getElementById("saveChangesBtn").addEventListener("click", async (e) => {
+            e.preventDefault();
+            console.log('button clicked');
+            const updatedData = {
+                trail_name: document.getElementById("trailName").value,
+                location: document.getElementById("location").value,
+                difficulty: document.getElementById("difficulty").value,
+                distance: document.getElementById("distance").value,
+                description: document.getElementById("description").value,
+                rating: document.getElementById("rating").value
+            };
+
+            try {
+                const updateResponse = await fetch(`${url}/trails/${trailId}`, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(updatedData),
+                });
+
+                if (updateResponse.ok) {
+                    console.log("Trail updated successfully");
+                    closeNav();
+                    getResultsContainer.innerHTML = "";
+                    getTrails();
+                    form.reset();
+                } else {
+                    throw new Error("Failed to update trail");
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        });
     }
 });
 
-// editBtn.addEventListener("click", () => {
-//     fetch(`${url}/trails/${trail.trail_id}`, { 
-//         method: "PUT", 
-//         }).then(() => {
-//         containerEl.innerHTML = "";
-//         console.log(`trail was successfully updated`);
-//         createForm();
-//       }
-//     );
-// });
+const submitBtn = document.getElementById('submitBtn');
 const form = document.getElementById('sidebar-form');
 
 submitBtn.addEventListener("click", async (e) => {
