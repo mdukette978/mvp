@@ -28,11 +28,84 @@ function getTrails() {
             <p>${trail.description}</p>
             <p>${trail.rating} stars</p>
             <div class="card-buttons">
-                <button class="edit-button" onclick="editTrail(${trail.trail_id})">Edit</button>
-                <button class="delete-button" onclick="deleteTrail(${trail.trail_id})">Delete</button>
+                <button id="editBtn" class="edit-button">Edit</button>
+                <button id="deleteBtn" class="delete-button">Delete</button>
             </div>
        </div>`;
    }
 
-//function editTrail() {};
-//function deleteTrail() {};
+const deleteBtn = document.getElementById('deleteBtn');
+const editBtn = document.getElementById('editBtn');
+const submitBtn = document.getElementById('submitBtn');
+
+// deleteBtn.addEventListener("click", () => {
+//     let choice = prompt('Are you sure you want to delete this trail?');
+//     if (choice == "yes") {
+//       fetch(`${url}/trails/${trail.trail_id}`, {
+//         method: "DELETE",
+//       }).then(() => {
+//         console.log(`trail was deleted.`);
+//         getTrails();
+//       });
+//     }
+// });
+
+// editBtn.addEventListener("click", () => {
+//     fetch(`${url}/trails/${trail.trail_id}`, { 
+//         method: "PUT", 
+//         }).then(() => {
+//         containerEl.innerHTML = "";
+//         console.log(`trail was successfully updated`);
+//         createForm();
+//       }
+//     );
+// });
+
+submitBtn.addEventListener("click", async (e) => {
+    e.preventDefault();
+    console.log('button clicked');
+    const trailName = document.getElementById("trailName").value;
+    const location = document.getElementById("location").value;
+    const difficulty = document.getElementById("difficulty").value;
+    const distance = document.getElementById("distance").value;
+    const description = document.getElementById("description").value;
+    const rating = document.getElementById("rating").value;
+
+    const formData = {
+        trail_name: trailName, 
+        location: location, 
+        difficulty: difficulty, 
+        distance: distance, 
+        description: description, 
+        rating: rating
+    } 
+console.log(formData);
+    try {
+        const response = await fetch(`${url}/trails`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+        });
+
+        if (response.ok) {
+            console.log("Trail added successfully");
+            getTrails();
+        } else {
+            throw new Error("Failed to add trail");
+        }
+    } catch (err) {
+        console.error(err);
+    }
+});
+
+
+function openNav() {
+    document.getElementById("mySidebar").style.width = "250px";
+    document.getElementById("main").style.marginLeft = "250px";
+}
+function closeNav() {
+    document.getElementById("mySidebar").style.width = "0";
+    document.getElementById("main").style.marginLeft = "0";
+}
