@@ -14,15 +14,55 @@ body {
     left: 0;
     background-color: #963A2F;
     overflow-x: hidden;
-    transition: 0.5s;
-    padding-top: 60px;
+    transition: 0.3s;
+    padding-top: 20px;
 }
+.sidebar-content{
+    padding-left: 10px;
+    padding-right: 10px;
+}
+.form-style-7 label {
+    color: #FFFEE9;
+    margin-bottom: 3px;
+    font-weight: bold;
+}
+.trail_info {
+    color: #963A2F;
+    background-color: #FFFEE9;
+    margin-bottom: 3px;
+    font-weight: bold;
+    padding: 20px;
+    border: 1px solid black;
+    /* border-radius: 5px; */
+    display: flex;
+    justify-content: center;
+  }
+.form-style-7 input[type="text"],
+.form-style-7 textarea {
+    padding: 5px;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #FFFEE9;
+    color: #FFFEE9;
+    width: 100%;
+    box-sizing: border-box;
+}
+.closebtn {
+    color: #FFFEE9;
+    font-size: 30px;
+    display:flex;
+    justify-content: flex-end;
+    margin-right: 10px;
+    margin-bottom: 40px;
+    cursor: pointer;
+  }
 
 .sticky-header {
     position: sticky;
     top: 0;
     background-color: #f9f9f9;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
     padding: 10px 20px;
     display: flex;
     align-items: center;
@@ -50,7 +90,7 @@ body {
 }
 
 .banner {
-    height: 150px;
+    height: 200px;
     width: 100%;
     position: relative;
   }
@@ -60,3 +100,47 @@ body {
     width: 100%;
     object-fit: cover;
   }
+
+  .openbtn {
+    background-color: #BEDCB5;
+    transition: transform 0.3s;
+  }
+  
+  .openbtn:hover {
+    transform: scale(1.05); /* Increase the size on hover */
+  }
+
+  select.form-select:focus {
+    outline: none; /* Remove the default focus outline */
+    border-color: #BEDCB5; /* Set the border color when the dropdown is focused */
+    box-shadow: 0 0 0 0.2rem rgba(190, 220, 181, 0.50); 
+  }
+
+#submitBtn {
+    border-radius: 5px;
+    background-color: #FFFEE9;
+    transition: transform 0.3s;
+    padding: 10px 10px;
+    color: #963A2F;
+    font-weight: bold;
+    cursor: pointer;
+}
+#submitBtn:hover {
+    transform: scale(1.05);
+    color: black;
+}
+
+#saveChangesBtn {
+    border-radius: 5px;
+    background-color: #FFFEE9;
+    transition: transform 0.3s;
+    padding: 10px 10px;
+    color: #963A2F;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#saveChangesBtn:hover {
+    transform: scale(1.05);
+    color: black;
+}

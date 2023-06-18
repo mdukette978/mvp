@@ -27,7 +27,7 @@ app.get('/trails', async (req, res) => {
     }
 });
 
-app.post('/trails', async (req, res) => {
+app.post('/trailsbyloc', async (req, res) => {
     const { location } = req.body;
     console.log(req.body);
     try {
@@ -58,6 +58,7 @@ app.post("/trails", async (req, res) => {
     try {
         const { trail_name, location, difficulty, distance, description, rating } = trailbody;
         const results = await client.query('INSERT INTO trails(trail_name, location, difficulty, distance, description, rating) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *', [trail_name, location, difficulty, distance, description, rating]);
+
         res.status(201).json(results.rows);
     } catch (err) {
         console.error(err);

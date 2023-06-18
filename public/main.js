@@ -12,6 +12,7 @@ async function getTrails() {
         const response = await fetch(`${url}/trails`);
         const results = await response.json();
         console.log(results);
+        getResultsContainer.innerHTML = "";
         results.forEach((trail) => {
             getResultsContainer.innerHTML += makeCard(trail);
         });
@@ -23,17 +24,19 @@ getTrails();
 
 function makeCard(trail) {
     return `
-    <div class="getresults-card" style="display: inline-block; width: 300px; background-color: #FFFEE9; border-radius: 5px; padding: 20px; margin: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
-        <h3 class="name" style="font-size: 20px; font-weight: bold; margin-bottom: 10px;">${trail.trail_name}</h3>
+    <div class="getresults-card" style="display: inline-block; width: 300px; background-color: #FFFEE9; border-radius: 5px; padding: 20px; margin: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);">
+        <div style="display: flex; align-items: center; margin-bottom: 10px;">
+            <h3 class="name" style="font-size: 20px; font-weight: bold; margin-bottom: 10px;">${trail.trail_name}</h3>
+            <a href="" class="fas fa-map-marker-alt" style="text-decoration:none; font-size: 25px; color: #963A2F; margin-right: 5px; margin-top: -25px"></a>    
+        </div>
         <p style="font-size: 14px; color: #555; margin-bottom: 5px;">${trail.location}</p>
-        <p style="font-size: 14px; color: #555; margin-bottom: 5px;">${trail.difficulty}</p>
         <p style="font-size: 14px; color: #555; margin-bottom: 5px;">${trail.distance} mi</p>
         <p style="font-size: 16px; color: black; margin-bottom: 10px;">${trail.description}</p>
         <p class="read-more" style="display: none;"><a href="#" onclick="toggleDescription(this); return false;">Read More</a></p>
-        <p style="font-size: 14px; color: black; margin-bottom: 15px;">${trail.rating}★</p>
+        <p style="font-size: 16px; color: black; margin-bottom: 15px;">${trail.rating}★</p>
         <div class="card-buttons" style="display: flex; justify-content: flex-end">
-            <button class="edit-button" style="border-radius: 5px; background-color: #BEDCB5" data-trail_id="${trail.trail_id}">Edit</button>
-            <button class="delete-button" style="border-radius: 5px; background-color: #BEDCB5" data-trail_id="${trail.trail_id}">Delete</button>
+            <button class="edit-button" style="border-radius: 5px; background-color: #BEDCB5" data-trail_id="${trail.trail_id}"><i style="color:#303030;" class="fas fa-edit"></i></button>
+            <button class="delete-button" style="margin-left: 5px; border-radius: 5px; background-color: #303030" data-trail_id="${trail.trail_id}"><i style="color:#BEDCB5" class="fas fa-trash"></i></button>
         </div>
     </div>`;
 }
@@ -44,7 +47,7 @@ var dropdown = document.getElementById('dropdown');
     console.log('Yes, working');
 
     try {
-        const response = await fetch(`${url}/trails`, {
+        const response = await fetch(`${url}/trailsbyloc`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -54,10 +57,18 @@ var dropdown = document.getElementById('dropdown');
       
         const data = await response.json();
         console.log(data);
-        getResultsContainer.innerHTML = '';
-        data.forEach((trail) => {
-          getResultsContainer.innerHTML += makeCard(trail);
-        });
+        if (data.length === 0) {
+            getResultsContainer.innerHTML = `<p>No results found... Try another location &#128578</p>`;
+            getResultsContainer.style.display = "flex";
+            getResultsContainer.style.justifyContent = "center";
+            getResultsContainer.style.fontSize = "35px";
+            getResultsContainer.style.textAlign = "center";
+        } else {
+            getResultsContainer.innerHTML = '';
+            data.forEach((trail) => {
+            getResultsContainer.innerHTML += makeCard(trail);
+            });
+        }
       } catch (error) {
         console.error(error);
       }
@@ -88,6 +99,7 @@ document.addEventListener('click', async (event) => {
     }
     if (editBtn) {
         const trailId = editBtn.dataset.trail_id;
+        console.log(trailId)
         const response = await fetch(`${url}/trails/${trailId}`);
         const results = await response.json();
         console.log(results[0])
@@ -195,8 +207,9 @@ submitBtn.addEventListener("click", async (e) => {
 
         if (response.ok) {
             console.log("Trail added successfully");
+            getResultsContainer.innerHTML = '';
+            await getTrails();
             closeNav();
-            getTrails();
             form.reset();
         } else {
             throw new Error("Failed to add trail");
@@ -209,14 +222,15 @@ submitBtn.addEventListener("click", async (e) => {
 
 function openNav() {
     console.log('openning sidebar')
-    document.getElementById("mySidebar").style.width = "250px";
-    document.getElementById("main").style.marginLeft = "250px";
+    document.getElementById("mySidebar").style.width = "300px";
+    document.getElementById("main").style.marginLeft = "300px";
 
     // document.addEventListener("click", outsideClickHandler);
 }
 function closeNav() {
     document.getElementById("mySidebar").style.width = "0";
     document.getElementById("main").style.marginLeft = "0";
+    form.reset();
 
     // document.removeEventListener("click", outsideClickHandler);
 }
