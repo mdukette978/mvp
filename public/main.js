@@ -25,10 +25,12 @@ getTrails();
 function makeCard(trail) {
     return `
     <div class="getresults-card" style="display: inline-block; width: 300px; background-color: #FFFEE9; border-radius: 5px; padding: 20px; margin: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);">
-        <div style="display: flex; align-items: center; margin-bottom: 10px;">
-            <h3 class="name" style="font-size: 20px; font-weight: bold; margin-bottom: 10px;">${trail.trail_name}</h3>
-            <a href="" class="fas fa-map-marker-alt" style="text-decoration:none; font-size: 25px; color: #963A2F; margin-right: 5px; margin-top: -25px"></a>    
-        </div>
+        <a href="${trail.map_link}" target="_blank" style="text-decoration: none;">
+            <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                <i class="fas fa-map-marker-alt" style="text-decoration:none; font-size: 22px; color: #963A2F; margin-right: 12px; margin-top: -18px"></i>
+                <h3 class="name" style="color: black; font-size: 20px; font-weight: bold; margin-bottom: 10px;">${trail.trail_name}</h3>
+            </div>
+        </a>
         <p style="font-size: 14px; color: #555; margin-bottom: 5px;">${trail.location}</p>
         <p style="font-size: 14px; color: #555; margin-bottom: 5px;">${trail.difficulty}</p>
         <p style="font-size: 14px; color: #555; margin-bottom: 5px;">${trail.distance} mi</p>
@@ -37,7 +39,7 @@ function makeCard(trail) {
         <p style="font-size: 16px; color: black; margin-bottom: 15px;">${trail.rating}★</p>
         <div class="card-buttons" style="display: flex; justify-content: flex-end">
             <button class="edit-button" style="border-radius: 5px; background-color: #BEDCB5" data-trail_id="${trail.trail_id}"><i style="color:#303030;" class="fas fa-edit"></i></button>
-            <button class="delete-button" style="margin-left: 5px; border-radius: 5px; background-color: #303030" data-trail_id="${trail.trail_id}"><i style="color:#BEDCB5" class="fas fa-trash"></i></button>
+            <button class="delete-button" style="margin-left: 5px; border-radius: 5px; background-color: #BEDCB5" data-trail_id="${trail.trail_id}"><i style="color:#303030" class="fas fa-trash"></i></button>
         </div>
     </div>`;
 }
@@ -46,7 +48,13 @@ var dropdown = document.getElementById('dropdown');
     dropdown.addEventListener("change", async function() {
     const userInput = dropdown.value;
     console.log('Yes, working');
-
+    if (userInput === "") {
+        return;
+    }
+    if (userInput === "All") {
+        getTrails();
+        return;
+    }
     try {
         const response = await fetch(`${url}/trailsbyloc`, {
           method: 'POST',
@@ -59,13 +67,10 @@ var dropdown = document.getElementById('dropdown');
         const data = await response.json();
         console.log(data);
         if (data.length === 0) {
-            getResultsContainer.innerHTML = `<p>No results found... Try another location &#128578</p>`;
-            getResultsContainer.style.display = "flex";
-            getResultsContainer.style.justifyContent = "center";
-            getResultsContainer.style.fontSize = "35px";
-            getResultsContainer.style.textAlign = "center";
-        } else {
-            getResultsContainer.innerHTML = '';
+            getResultsContainer.innerHTML = `<p style="display:flex; justify-Content: center; font-size: 25px; text-align: center">No results found... Try another location &#128578</p>`;
+        }
+        if (data.length > 0) {
+            getResultsContainer.innerHTML = `<p style="display:flex; justify-Content: center; font-size: 25px; text-align: center">Search results for '${userInput}'</p>`;
             data.forEach((trail) => {
             getResultsContainer.innerHTML += makeCard(trail);
             });
