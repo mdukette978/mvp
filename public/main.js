@@ -117,6 +117,7 @@ document.addEventListener('click', async (event) => {
         document.getElementById("distance").value = results[0].distance;
         document.getElementById("description").value = results[0].description;
         document.getElementById("rating").value = results[0].rating;
+        document.getElementById("map").value = results[0].map_link;
 
         // Show the "Save Changes" button and hide the "Submit" button
         submitBtn.style.display = "none";
@@ -131,7 +132,8 @@ document.addEventListener('click', async (event) => {
                 difficulty: document.getElementById("difficulty").value,
                 distance: document.getElementById("distance").value,
                 description: document.getElementById("description").value,
-                rating: document.getElementById("rating").value
+                rating: document.getElementById("rating").value,
+                map_link: document.getElementById("map").value
             };
 
             try {
@@ -192,6 +194,7 @@ submitBtn.addEventListener("click", async (e) => {
     const distance = document.getElementById("distance").value;
     const description = document.getElementById("description").value;
     const rating = document.getElementById("rating").value;
+    const map = document.getElementById("map").value;
 
     const formData = {
         trail_name: trailName, 
@@ -199,7 +202,8 @@ submitBtn.addEventListener("click", async (e) => {
         difficulty: difficulty, 
         distance: distance, 
         description: description, 
-        rating: rating
+        rating: rating,
+        map_link: map
     } 
     console.log(formData);
     try {
