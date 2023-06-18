@@ -25,12 +25,13 @@ getTrails();
 function makeCard(trail) {
     return `
     <div class="getresults-card" style="display: inline-block; width: 300px; background-color: #FFFEE9; border-radius: 5px; padding: 20px; margin: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);">
-        <a href="${trail.map_link}" target="_blank" style="text-decoration: none;">
+        <a href="${trail.info_link}" target="_blank" style="text-decoration: none;">
             <div style="display: flex; align-items: center; margin-bottom: 10px;">
-                <i class="fas fa-map-marker-alt" style="text-decoration:none; font-size: 22px; color: #963A2F; margin-right: 12px; margin-top: -18px"></i>
+                <i class="fas fa-info-circle" style="text-decoration:none; font-size: 22px; color: #963A2F; margin-right: 12px; margin-top: -18px"></i>
                 <h3 class="name" style="color: black; font-size: 20px; font-weight: bold; margin-bottom: 10px;">${trail.trail_name}</h3>
             </div>
         </a>
+        <iframe src="${trail.map_link}" width="260" height="220" style="border-radius: 5px; border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
         <p style="font-size: 14px; color: #555; margin-bottom: 5px;">${trail.location}</p>
         <p style="font-size: 14px; color: #555; margin-bottom: 5px;">${trail.difficulty}</p>
         <p style="font-size: 14px; color: #555; margin-bottom: 5px;">${trail.distance} mi</p>
@@ -117,6 +118,7 @@ document.addEventListener('click', async (event) => {
         document.getElementById("distance").value = results[0].distance;
         document.getElementById("description").value = results[0].description;
         document.getElementById("rating").value = results[0].rating;
+        document.getElementById("info").value = results[0].info_link;
         document.getElementById("map").value = results[0].map_link;
 
         // Show the "Save Changes" button and hide the "Submit" button
@@ -133,6 +135,7 @@ document.addEventListener('click', async (event) => {
                 distance: document.getElementById("distance").value,
                 description: document.getElementById("description").value,
                 rating: document.getElementById("rating").value,
+                info_link: document.getElementById("info").value,
                 map_link: document.getElementById("map").value
             };
 
@@ -194,6 +197,7 @@ submitBtn.addEventListener("click", async (e) => {
     const distance = document.getElementById("distance").value;
     const description = document.getElementById("description").value;
     const rating = document.getElementById("rating").value;
+    const info = document.getElementById("info").value;
     const map = document.getElementById("map").value;
 
     const formData = {
@@ -203,6 +207,7 @@ submitBtn.addEventListener("click", async (e) => {
         distance: distance, 
         description: description, 
         rating: rating,
+        info_link: info,
         map_link: map
     } 
     console.log(formData);
