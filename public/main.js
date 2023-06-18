@@ -30,6 +30,7 @@ function makeCard(trail) {
             <a href="" class="fas fa-map-marker-alt" style="text-decoration:none; font-size: 25px; color: #963A2F; margin-right: 5px; margin-top: -25px"></a>    
         </div>
         <p style="font-size: 14px; color: #555; margin-bottom: 5px;">${trail.location}</p>
+        <p style="font-size: 14px; color: #555; margin-bottom: 5px;">${trail.difficulty}</p>
         <p style="font-size: 14px; color: #555; margin-bottom: 5px;">${trail.distance} mi</p>
         <p style="font-size: 16px; color: black; margin-bottom: 10px;">${trail.description}</p>
         <p class="read-more" style="display: none;"><a href="#" onclick="toggleDescription(this); return false;">Read More</a></p>
