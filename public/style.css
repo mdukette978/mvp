@@ -47,6 +47,16 @@ body {
     width: 100%;
     box-sizing: border-box;
 }
+.form-style-7 input[type="url"],
+.form-style-7 textarea {
+    padding: 5px;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #FFFEE9;
+    color: #FFFEE9;
+    width: 100%;
+    box-sizing: border-box;
+}
 .closebtn {
     color: #FFFEE9;
     font-size: 30px;

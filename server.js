@@ -56,8 +56,8 @@ app.get("/trails/:id", async (req, res) => {
 app.post("/trails", async (req, res) => {
     const trailbody = req.body;
     try {
-        const { trail_name, location, difficulty, distance, description, rating } = trailbody;
-        const results = await client.query('INSERT INTO trails(trail_name, location, difficulty, distance, description, rating) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *', [trail_name, location, difficulty, distance, description, rating]);
+        const { trail_name, location, difficulty, distance, description, rating, info_link, map_link } = trailbody;
+        const results = await client.query('INSERT INTO trails(trail_name, location, difficulty, distance, description, rating, info_link, map_link) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *', [trail_name, location, difficulty, distance, description, rating, info_link, map_link]);
 
         res.status(201).json(results.rows);
     } catch (err) {
@@ -68,9 +68,9 @@ app.post("/trails", async (req, res) => {
 
 app.put("/trails/:id", async (req, res) => { 
     const id = req.params.id;
-    const { trail_name, location, difficulty, distance, description, rating } = req.body;
+    const { trail_name, location, difficulty, distance, description, rating, info_link, map_link } = req.body;
     try {
-        const results = await client.query(`UPDATE trails SET trail_name = $1, location = $2, difficulty = $3, distance = $4, description = $5, rating = $6 WHERE trail_id = $7 RETURNING *`, [trail_name, location, difficulty, distance, description, rating, id]);
+        const results = await client.query(`UPDATE trails SET trail_name = $1, location = $2, difficulty = $3, distance = $4, description = $5, rating = $6, info_link = $7, map_link = $8 WHERE trail_id = $9 RETURNING *`, [trail_name, location, difficulty, distance, description, rating, info_link, map_link, id]);
         if (results.rowCount === 0) {
             res.status(404).send('Trail not found');
         }

@@ -128,6 +128,8 @@ document.addEventListener('click', async (event) => {
         document.getElementById("saveChangesBtn").addEventListener("click", async (e) => {
             e.preventDefault();
             console.log('button clicked');
+            console.log('info:', info);
+            console.log('map:', map);
             const updatedData = {
                 trail_name: document.getElementById("trailName").value,
                 location: document.getElementById("location").value,
@@ -138,7 +140,7 @@ document.addEventListener('click', async (event) => {
                 info_link: document.getElementById("info").value,
                 map_link: document.getElementById("map").value
             };
-
+            console.log('updatedData:', updatedData);
             try {
                 const updateResponse = await fetch(`${url}/trails/${trailId}`, {
                     method: "PUT",
